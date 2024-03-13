@@ -18,10 +18,7 @@ class ItakelloLogging:
         self.logs_folder = pathlib.Path("logs") / current_time
         self.logs_folder.mkdir(exist_ok=True, parents=True)
         handlers = self._get_handlers()
-        logging.basicConfig(
-            level=logging.DEBUG,
-            handlers=handlers,
-        )
+        logging.basicConfig(level=logging.DEBUG, handlers=handlers, force=True)
 
     def _get_handlers(self) -> list[logging.Handler]:
         handlers = [
