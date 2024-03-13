@@ -1,7 +1,3 @@
-Based on the project structure and requirements you provided, here's a README template filled out for your `itakello_logging` project:
-
----
-
 <h1 align="center">Itakello Logging</h1>
 
 ## 🪵 What is Itakello Logging
