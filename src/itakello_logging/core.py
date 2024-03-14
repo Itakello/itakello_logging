@@ -3,7 +3,7 @@ import pathlib
 from dataclasses import dataclass
 from datetime import datetime
 
-from .utils import ConsoleFormatter, DebugFilter
+from .utils import ConsoleFormatter, DebugFilter, GlobalFilter
 
 
 @dataclass
@@ -12,13 +12,17 @@ class ItakelloLogging:
     debug_mode: bool
     logs_folder: pathlib.Path
 
-    def __init__(self, debug: bool = False) -> None:
+    def __init__(self, debug: bool = False, excluded_modules: list[str] = []) -> None:
         self.debug_mode = debug
+        self._create_folder()
+        handlers = self._get_handlers()
+        logging.basicConfig(level=logging.DEBUG, handlers=handlers, force=True)
+        logging.getLogger().addFilter(GlobalFilter(excluded_modules=excluded_modules))
+
+    def _create_folder(self) -> None:
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         self.logs_folder = pathlib.Path("logs") / current_time
         self.logs_folder.mkdir(exist_ok=True, parents=True)
-        handlers = self._get_handlers()
-        logging.basicConfig(level=logging.DEBUG, handlers=handlers, force=True)
 
     def _get_handlers(self) -> list[logging.Handler]:
         handlers = [
@@ -53,3 +57,6 @@ class ItakelloLogging:
             )
         )
         return main_file_handler
+
+
+logging.info("Hi from core.py")

@@ -22,7 +22,9 @@ Using Itakello Logging is simple. Here's a quick example to get you started:
 import logging
 from itakello_logging import ItakelloLogging
 
-ItakelloLogging(debug=False)
+# Initialize the logging system with optional filtering by filename
+ItakelloLogging(debug=False, excluded_modules=["test.py", "another_module.py"])
+
 logging.debug("This is a debug message")
 logging.info("This is an info message")
 logging.warning("This is a warning message")
@@ -30,4 +32,4 @@ logging.error("This is an error message")
 logging.critical("This is a critical message")
 ```
 
-This setup initializes the logging system, and based on the `debug` parameter, it adjusts the log level. Messages will be logged accordingly, making it easier to filter the output for the relevant information.
+This setup initializes the logging system, and based on the `debug` parameter, it adjusts the log level. Additionally, by specifying the `excluded_modules` parameter, messages originating from the listed filenames (e.g., "test.py" and "another_module.py") will be excluded from the logs. This feature makes it easier to focus on the relevant information by filtering out noise from specific modules or scripts.
