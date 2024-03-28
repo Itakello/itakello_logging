@@ -56,7 +56,7 @@ class ItakelloLogging:
         s_handler = logging.StreamHandler()
         s_handler.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
         console_formatter = ConsoleFormatter(
-            "%(asctime)s - %(filename)s - %(message)s", "%H:%M:%S"
+            "%(asctime)s - %(name)s - %(message)s", "%H:%M:%S"
         )
         s_handler.setFormatter(console_formatter)
         return s_handler
@@ -66,15 +66,13 @@ class ItakelloLogging:
         f_handler = logging.FileHandler(self.folder / f"{current_time}.log")
         f_handler.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
         f_handler.setFormatter(
-            logging.Formatter(
-                "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
-            )
+            logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         )
         return f_handler
 
 
 if __name__ == "__main__":
-    from test_logs.test_logs import test_func
+    from .test_logs.test_logs import test_func
 
     ItakelloLogging(debug=True, excluded_modules=[], exclude_root=False)
     logging.debug("Test debug message from core.py with root logger")
