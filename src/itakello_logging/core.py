@@ -3,8 +3,8 @@ import pathlib
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from filters import CustomExcludeFilter, IgnoreRootFilter
-from formatters import ConsoleFormatter
+from .filters import CustomExcludeFilter, IgnoreRootFilter
+from .formatters import ConsoleFormatter
 
 
 @dataclass
