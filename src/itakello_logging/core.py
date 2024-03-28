@@ -1,62 +1,91 @@
 import logging
 import pathlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
-from .utils import ConsoleFormatter, DebugFilter, GlobalFilter
+from filters import CustomExcludeFilter, IgnoreRootFilter
+from formatters import ConsoleFormatter
 
 
 @dataclass
 class ItakelloLogging:
 
-    debug_mode: bool
-    logs_folder: pathlib.Path
+    debug_mode: bool = field(init=False)
+    handlers: list[logging.Handler] = field(init=False)
+    folder: pathlib.Path = field(init=False)
 
-    def __init__(self, debug: bool = False, excluded_modules: list[str] = []) -> None:
+    def __init__(
+        self,
+        excluded_modules: list[str] = [],
+        debug: bool = False,
+        exclude_root: bool = False,
+    ) -> None:
         self.debug_mode = debug
-        self._create_folder()
-        handlers = self._get_handlers()
+        self.folder = self._create_folder("logs")
+        handlers = self._get_handlers(excluded_modules, exclude_root)
         logging.basicConfig(level=logging.DEBUG, handlers=handlers, force=True)
-        logging.getLogger().addFilter(GlobalFilter(excluded_modules=excluded_modules))
 
-    def _create_folder(self) -> None:
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.logs_folder = pathlib.Path("logs") / current_time
-        self.logs_folder.mkdir(exist_ok=True, parents=True)
+    def _create_folder(self, f_name: str) -> pathlib.Path:
+        folder = pathlib.Path(f_name)
+        folder.mkdir(exist_ok=True, parents=True)
+        return folder
 
-    def _get_handlers(self) -> list[logging.Handler]:
+    def _get_handlers(
+        self, excluded_loggers: list[str], exclude_root: bool
+    ) -> list[logging.Handler]:
         handlers = [
             self._get_stream_handler(),
-            self._get_main_file_handler(),
-            self._get_debug_file_handler(),
+            self._get_file_handler(),
         ]
+        filters = self._get_filters(excluded_loggers, exclude_root)
+        for handler in handlers:
+            for filter in filters:
+                handler.addFilter(filter)
         return handlers
 
+    def _get_filters(
+        self, excluded_loggers: list[str], exclude_root: bool
+    ) -> list[logging.Filter]:
+        filters = []
+        filters.append(CustomExcludeFilter(modules=excluded_loggers))
+        if exclude_root:
+            filters.append(IgnoreRootFilter())
+        return filters
+
     def _get_stream_handler(self) -> logging.StreamHandler:
-        stream_handler = logging.StreamHandler()
-        stream_handler.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
+        s_handler = logging.StreamHandler()
+        s_handler.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
         console_formatter = ConsoleFormatter(
             "%(asctime)s - %(filename)s - %(message)s", "%H:%M:%S"
         )
-        stream_handler.setFormatter(console_formatter)
-        return stream_handler
+        s_handler.setFormatter(console_formatter)
+        return s_handler
 
-    def _get_debug_file_handler(self) -> logging.FileHandler:
-        debug_file_handler = logging.FileHandler(self.logs_folder / "debug.log")
-        debug_file_handler.setLevel(logging.DEBUG)
-        debug_file_handler.addFilter(DebugFilter())
-        debug_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
-        return debug_file_handler
-
-    def _get_main_file_handler(self) -> logging.FileHandler:
-        main_file_handler = logging.FileHandler(self.logs_folder / "main.log")
-        main_file_handler.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
-        main_file_handler.setFormatter(
+    def _get_file_handler(self) -> logging.FileHandler:
+        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        f_handler = logging.FileHandler(self.folder / f"{current_time}.log")
+        f_handler.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
+        f_handler.setFormatter(
             logging.Formatter(
                 "%(asctime)s - %(filename)s - %(levelname)s - %(message)s"
             )
         )
-        return main_file_handler
+        return f_handler
 
 
-logging.info("Hi from core.py")
+if __name__ == "__main__":
+    from test_logs.test_logs import test_func
+
+    ItakelloLogging(debug=True, excluded_modules=[], exclude_root=False)
+    logging.debug("Test debug message from core.py with root logger")
+    logging.info("Test info message from core.py with root logger")
+    logging.warning("Test warning message from core.py with root logger")
+    logging.error("Test error message from core.py with root logger")
+    logging.critical("Test critical message from core.py with root logger")
+    logger = logging.getLogger(__name__)
+    logger.debug("Test debug message from core.py with custom logger")
+    logger.info("Test info message from core.py with custom logger")
+    logger.warning("Test warning message from core.py with custom logger")
+    logger.error("Test error message from core.py with custom logger")
+    logger.critical("Test critical message from core.py with custom logger")
+    test_func()
