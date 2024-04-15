@@ -2,9 +2,11 @@ import logging
 import pathlib
 from dataclasses import dataclass, field
 from datetime import datetime
+from typing import cast
 
 from .filters import CustomExcludeFilter, IgnoreRootFilter
 from .formatters import ConsoleFormatter
+from .loggers import ConfirmationLogger
 
 
 @dataclass
@@ -20,10 +22,15 @@ class ItakelloLogging:
         debug: bool = False,
         exclude_root: bool = False,
     ) -> None:
+        logging.setLoggerClass(ConfirmationLogger)
         self.debug_mode = debug
         self.folder = self._create_folder("logs")
         handlers = self._get_handlers(excluded_modules, exclude_root)
         logging.basicConfig(level=logging.DEBUG, handlers=handlers, force=True)
+
+    @staticmethod
+    def get_logger(name: str) -> ConfirmationLogger:
+        return cast(ConfirmationLogger, logging.getLogger(name))
 
     def _create_folder(self, f_name: str) -> pathlib.Path:
         folder = pathlib.Path(f_name)
@@ -64,7 +71,7 @@ class ItakelloLogging:
     def _get_file_handler(self) -> logging.FileHandler:
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         f_handler = logging.FileHandler(self.folder / f"{current_time}.log")
-        f_handler.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
+        f_handler.setLevel(logging.DEBUG)
         f_handler.setFormatter(
             logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         )
@@ -80,9 +87,10 @@ if __name__ == "__main__":
     logging.warning("Test warning message from core.py with root logger")
     logging.error("Test error message from core.py with root logger")
     logging.critical("Test critical message from core.py with root logger")
-    logger = logging.getLogger(__name__)
+    logger = ItakelloLogging.get_logger(__name__)
     logger.debug("Test debug message from core.py with custom logger")
     logger.info("Test info message from core.py with custom logger")
+    logger.confirmation("Test confirmation message from core.py with custom logger")
     logger.warning("Test warning message from core.py with custom logger")
     logger.error("Test error message from core.py with custom logger")
     logger.critical("Test critical message from core.py with custom logger")
