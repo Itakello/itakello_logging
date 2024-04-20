@@ -6,7 +6,7 @@ from typing import cast
 
 from .filters import CustomExcludeFilter, IgnoreRootFilter
 from .formatters import ConsoleFormatter
-from .loggers import ConfirmationLogger
+from .loggers import CustomLogger
 
 
 @dataclass
@@ -22,15 +22,15 @@ class ItakelloLogging:
         debug: bool = False,
         exclude_root: bool = False,
     ) -> None:
-        logging.setLoggerClass(ConfirmationLogger)
+        logging.setLoggerClass(CustomLogger)
         self.debug_mode = debug
         self.folder = self._create_folder("logs")
         handlers = self._get_handlers(excluded_modules, exclude_root)
         logging.basicConfig(level=logging.DEBUG, handlers=handlers, force=True)
 
     @staticmethod
-    def get_logger(name: str) -> ConfirmationLogger:
-        return cast(ConfirmationLogger, logging.getLogger(name))
+    def get_logger(name: str) -> CustomLogger:
+        return cast(CustomLogger, logging.getLogger(name))
 
     def _create_folder(self, f_name: str) -> pathlib.Path:
         folder = pathlib.Path(f_name)
@@ -62,9 +62,7 @@ class ItakelloLogging:
     def _get_stream_handler(self) -> logging.StreamHandler:
         s_handler = logging.StreamHandler()
         s_handler.setLevel(logging.DEBUG if self.debug_mode else logging.INFO)
-        console_formatter = ConsoleFormatter(
-            "%(asctime)s - %(name)s - %(message)s", "%H:%M:%S"
-        )
+        console_formatter = ConsoleFormatter("%(message)s")
         s_handler.setFormatter(console_formatter)
         return s_handler
 

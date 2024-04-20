@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="itakello_logging",
-    version="0.2.0",
+    version="0.2.1",
     author="Itakello",
     author_email="maxste000@gmail.com",
     description="A custom logging library by Itakello",

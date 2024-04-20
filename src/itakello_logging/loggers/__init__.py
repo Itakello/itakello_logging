@@ -1,1 +1,1 @@
-from .confirmation_logger import ConfirmationLogger
+from .custom_logger import CustomLogger
