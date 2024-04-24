@@ -10,7 +10,7 @@ class ConsoleFormatter(logging.Formatter):
     color_codes = {
         logging.DEBUG: "\033[94m",  # Blue
         CONFIRMATION_LEVEL: "\033[92m",  # Green
-        INSTRUCTION_LEVEL: "\033[33m",  # Orange
+        INSTRUCTION_LEVEL: "\033[36m",  # Orange
         logging.WARNING: "\033[93m",  # Yellow
         logging.ERROR: "\033[91m",  # Red
         logging.CRITICAL: "\033[95m",  # Magenta
