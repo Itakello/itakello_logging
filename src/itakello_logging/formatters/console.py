@@ -22,6 +22,8 @@ class ConsoleFormatter(logging.Formatter):
         )  # Default to no color
         if record.levelno == INSTRUCTION_LEVEL:
             level_color += f"\n\033[1mInstructions\033[0m{level_color}:\n"
+        elif record.levelno == logging.WARNING:
+            level_color += f"\n\033[1mWarning\033[0m{level_color}:\n"
         message = super().format(record)
         final_message = f"{level_color}{message}\033[0m"
         return final_message
