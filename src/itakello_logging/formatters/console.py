@@ -1,11 +1,11 @@
 import logging
 
+INSTRUCTION_LEVEL = 24
+CONFIRMATION_LEVEL = 25
+
 
 class ConsoleFormatter(logging.Formatter):
     """Custom formatter to add colors to logging levels."""
-
-    CONFIRMATION_LEVEL = 25
-    INSTRUCTION_LEVEL = 24
 
     color_codes = {
         logging.DEBUG: "\033[94m",  # Blue
@@ -20,5 +20,8 @@ class ConsoleFormatter(logging.Formatter):
         level_color = self.color_codes.get(
             record.levelno, "\033[0m"
         )  # Default to no color
+        if record.levelno == INSTRUCTION_LEVEL:
+            level_color += f"\033[1mInstructions\033[0m:\n{level_color}"
         message = super().format(record)
-        return f"{level_color}{message}\033[0m"  # Reset to default color at the end
+        final_message = f"{level_color}{message}\033[0m"
+        return final_message
