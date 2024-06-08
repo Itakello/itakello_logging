@@ -1,6 +1,6 @@
 import unittest
 
-from itakello_logging import ItakelloLogging
+from itakello_logging.core import ItakelloLogging
 
 logger = ItakelloLogging().get_logger(__name__)
 
@@ -18,15 +18,13 @@ class TestLogging(unittest.TestCase):
         try:
             raise ValueError("This is a test error")
         except ValueError as e:
-            logger.error(f"Test error message from test_func_with_exception: {str(e)}")
+            logger.error(str(e))
 
     def test_func_with_critical_exception(self) -> None:
         try:
             raise Exception("This is a test critical error")
         except Exception as e:
-            logger.critical(
-                f"Test critical message from test_func_with_critical_exception: {str(e)}"
-            )
+            logger.critical(str(e))
 
 
 if __name__ == "__main__":
