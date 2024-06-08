@@ -40,7 +40,7 @@ class ItakelloLogging:
     def _get_handlers(
         self, excluded_loggers: list[str], exclude_root: bool
     ) -> list[logging.Handler]:
-        handlers = [
+        handlers: list[logging.Handler] = [
             self._get_stream_handler(),
             self._get_file_handler(),
         ]
@@ -53,7 +53,7 @@ class ItakelloLogging:
     def _get_filters(
         self, excluded_loggers: list[str], exclude_root: bool
     ) -> list[logging.Filter]:
-        filters = []
+        filters: list[logging.Filter] = []
         filters.append(CustomExcludeFilter(modules=excluded_loggers))
         if exclude_root:
             filters.append(IgnoreRootFilter())
@@ -77,8 +77,6 @@ class ItakelloLogging:
 
 
 if __name__ == "__main__":
-    from .test_logs.test_logs import test_func
-
     ItakelloLogging(debug=True, excluded_modules=[], exclude_root=False)
     logging.debug("Test debug message from core.py with root logger")
     logging.info("Test info message from core.py with root logger")
@@ -92,4 +90,3 @@ if __name__ == "__main__":
     logger.warning("Test warning message from core.py with custom logger")
     logger.error("Test error message from core.py with custom logger")
     logger.critical("Test critical message from core.py with custom logger")
-    test_func()
