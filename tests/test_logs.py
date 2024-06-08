@@ -14,13 +14,13 @@ class TestLogging(unittest.TestCase):
         logger.error("Test error message from test.py")
         logger.critical("Test critical message from test.py")
 
-    def test_func_with_exception(self):
+    def test_func_with_exception(self) -> None:
         try:
             raise ValueError("This is a test error")
         except ValueError as e:
             logger.error(f"Test error message from test_func_with_exception: {str(e)}")
 
-    def test_func_with_critical_exception(self):
+    def test_func_with_critical_exception(self) -> None:
         try:
             raise Exception("This is a test critical error")
         except Exception as e:
