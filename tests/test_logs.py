@@ -9,6 +9,13 @@ class TestLogging(unittest.TestCase):
     def test_func_with_args(self) -> None:
         logger.debug("Test debug message from test.py")
         logger.info("Test info message from test.py")
+        logger.instruction(
+            [
+                "Test instruction 1 message from test.py",
+                "Test instruction 2 message from test.py",
+                "Test instruction 3 message from test.py",
+            ]
+        )
         logger.confirmation("Test confirmation message from test.py")
         logger.warning("Test warning message from test.py")
         logger.error("Test error message from test.py")

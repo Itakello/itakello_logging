@@ -16,9 +16,12 @@ class CustomLogger(logging.Logger):
 
     def instruction(self, instructions: list[str], *args, **kwargs) -> None:
 
-        message = ""
-        for index, instruction in enumerate(instructions):
-            message += f"{index + 1}. {instruction}\n"
+        message = "\n".join(
+            [
+                f"{index + 1}. {instruction}"
+                for index, instruction in enumerate(instructions)
+            ]
+        )
 
         if self.isEnabledFor(self.INSTRUCTION_LEVEL):
             self._log(self.INSTRUCTION_LEVEL, message, args, **kwargs)
