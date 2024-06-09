@@ -4,9 +4,10 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import cast
 
-from .filters import CustomExcludeFilter, IgnoreRootFilter
-from .formatters import ConsoleFormatter
-from .loggers import CustomLogger
+from .filters.custom_exclude import CustomExcludeFilter
+from .filters.ignore_root import IgnoreRootFilter
+from .formatters.console import ConsoleFormatter
+from .loggers.custom_logger import CustomLogger
 
 
 @dataclass
@@ -70,9 +71,8 @@ class ItakelloLogging:
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         f_handler = logging.FileHandler(self.folder / f"{current_time}.log")
         f_handler.setLevel(logging.DEBUG)
-        f_handler.setFormatter(
-            logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-        )
+        date_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        f_handler.setFormatter(logging.Formatter(date_format))
         return f_handler
 
 
@@ -83,10 +83,3 @@ if __name__ == "__main__":
     logging.warning("Test warning message from core.py with root logger")
     logging.error("Test error message from core.py with root logger")
     logging.critical("Test critical message from core.py with root logger")
-    logger = ItakelloLogging.get_logger(__name__)
-    logger.debug("Test debug message from core.py with custom logger")
-    logger.info("Test info message from core.py with custom logger")
-    logger.confirmation("Test confirmation message from core.py with custom logger")
-    logger.warning("Test warning message from core.py with custom logger")
-    logger.error("Test error message from core.py with custom logger")
-    logger.critical("Test critical message from core.py with custom logger")
