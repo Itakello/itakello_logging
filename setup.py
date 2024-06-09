@@ -15,6 +15,9 @@ setup(
         "dev": [
             "mypy",  # Type checker
             "pytest",  # Testing framework
+            "black", # Code formatter
+            "flake8", # Code linter
+            "setuptools", # Packaging tool
         ],
     },
     python_requires=">=3.10",

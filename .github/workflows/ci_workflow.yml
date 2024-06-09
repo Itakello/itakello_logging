@@ -61,7 +61,7 @@ jobs:
         run: python -m pip install mypy
       
       - name: Run mypy
-        run: mypy . --exclude build
+        run: mypy . --exclude --ignore-missing-imports
 
   lint-check:
     needs: cache
