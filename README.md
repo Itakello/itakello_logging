@@ -27,6 +27,8 @@ ItakelloLogging(debug=False, excluded_modules=["test.py", "another_module.py"])
 
 logging.debug("This is a debug message")
 logging.info("This is an info message")
+logging.instruction("This is an instruction message")
+logging.confirmation("This is a confirmation message")
 logging.warning("This is a warning message")
 logging.error("This is an error message")
 logging.critical("This is a critical message")
