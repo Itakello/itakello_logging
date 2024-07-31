@@ -13,9 +13,11 @@ setup(
     packages=find_packages(where="src"),
     extras_require={
         "dev": [
-            "types-setuptools",  # Add type stubs here
             "mypy",  # Type checker
             "pytest",  # Testing framework
+            "black", # Code formatter
+            "flake8", # Code linter
+            "setuptools", # Packaging tool
         ],
     },
     python_requires=">=3.10",

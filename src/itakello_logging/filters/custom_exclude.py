@@ -8,4 +8,4 @@ class CustomExcludeFilter(logging.Filter):
         self.modules = modules
 
     def filter(self, record: logging.LogRecord) -> bool:
-        return not record.name in self.modules
+        return record.name not in self.modules
